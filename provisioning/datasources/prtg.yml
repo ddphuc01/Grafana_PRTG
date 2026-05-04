@@ -1,0 +1,19 @@
+apiVersion: 1
+
+datasources:
+  - name: PRTG
+    type: jasonlashua-prtg-datasource
+    access: proxy
+    # url là top-level field - instanceSettings.url trong plugin source
+    url: "${PRTG_URL}"
+    isDefault: true
+    jsonData:
+      # Tên field chính xác từ datasource.js:
+      # this.username = instanceSettings.jsonData.prtgApiUser
+      # this.passhash = instanceSettings.jsonData.prtgApiPasshash
+      prtgApiUser: "${PRTG_USERNAME}"
+      prtgApiPasshash: "${PRTG_PASSHASH}"
+      tzAutoAdjust: false
+      cacheTimeoutMinutes: 5
+    version: 1
+    editable: true

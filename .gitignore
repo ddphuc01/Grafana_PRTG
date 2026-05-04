@@ -1,0 +1,21 @@
+# =============================================================
+# .gitignore cho Grafana-PRTG Stack
+# =============================================================
+
+# QUAN TRỌNG: Không bao giờ commit file chứa credentials
+.env
+*.env
+.env.*
+!.env.example
+
+# Dữ liệu Grafana runtime (giữ template, không giữ credentials thực tế)
+# provisioning/datasources/*.yml
+!provisioning/datasources/.gitkeep
+
+# Log files
+*.log
+logs/
+
+# OS files
+Thumbs.db
+.DS_Store

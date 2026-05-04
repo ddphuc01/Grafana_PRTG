@@ -1,0 +1,17 @@
+apiVersion: 1
+
+datasources:
+  - name: PRTG
+    type: jasonlashua-prtg-datasource
+    access: proxy
+    isDefault: true
+    jsonData:
+      # URL tới PRTG server của bạn (thay bằng IP/hostname thực)
+      prtgURL: "https://192.168.1.100"
+      # Username đăng nhập PRTG
+      username: "admin"
+      # Passhash lấy từ:
+      # https://<PRTG_SERVER>/api/getpasshash.htm?username=<user>&password=<pass>
+      passhash: "YOUR_PASSHASH_HERE"
+      # Tắt verify SSL nếu PRTG dùng self-signed certificate
+      verifySsl: false

@@ -1,0 +1,55 @@
+version: "3.8"
+
+services:
+  grafana:
+    image: grafana/grafana:10.4.14
+    container_name: ${GRAFANA_CONTAINER_NAME:-grafana-prtg}
+    restart: unless-stopped
+    ports:
+      - "${GRAFANA_PORT:-3000}:3000"
+    environment:
+      # Thông tin đăng nhập Admin - lấy từ .env
+      - GF_SECURITY_ADMIN_USER=${GF_SECURITY_ADMIN_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
+
+      # Cho phép load unsigned plugin (bắt buộc với grafana-prtg)
+      - GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS=${GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS}
+
+      # Bật Angular support (bắt buộc cho jasonlashua-prtg-datasource)
+      # Lưu ý: Grafana v11+ đã xóa Angular, chỉ hoạt động trên v10.x
+      - GF_ANGULAR_SUPPORT_ENABLED=true
+      - GF_FEATURE_TOGGLES_ENABLE=angularDeprecationUI
+
+      # Tắt telemetry
+      - GF_ANALYTICS_REPORTING_ENABLED=${GF_ANALYTICS_REPORTING_ENABLED:-false}
+      - GF_ANALYTICS_CHECK_FOR_UPDATES=${GF_ANALYTICS_CHECK_FOR_UPDATES:-false}
+
+      # Timezone
+      - TZ=${TZ:-Asia/Ho_Chi_Minh}
+
+      # Truyền biến PRTG vào container để provisioning dùng
+      - PRTG_URL=${PRTG_URL}
+      - PRTG_USERNAME=${PRTG_USERNAME}
+      - PRTG_PASSHASH=${PRTG_PASSHASH}
+      - PRTG_VERIFY_SSL=${PRTG_VERIFY_SSL:-false}
+
+    volumes:
+      # Dữ liệu Grafana (dashboard, user, v.v.)
+      - grafana-data:/var/lib/grafana
+
+      # Thư mục chứa plugin grafana-prtg
+      - ./plugins:/var/lib/grafana/plugins
+
+      # Provisioning tự động datasource
+      - ./provisioning:/etc/grafana/provisioning
+
+    networks:
+      - grafana-net
+
+volumes:
+  grafana-data:
+    driver: local
+
+networks:
+  grafana-net:
+    driver: bridge
